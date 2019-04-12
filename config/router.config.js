@@ -1,8 +1,8 @@
 export default [
-    { path: '/', redirect: '/user' },
+    { path: '/', redirect: '/member' },
     // operation
     {
-        path:"/basic",
+        path:"/",
         component: '../layout/BasicLayout',
         routes: [
             {
@@ -13,6 +13,16 @@ export default [
                     { path: '/basic/workplace', component: 'basic/workplace' }
                 ]
             },
+            {
+                path: '/member',
+                routes: [
+                    { path: '/member/member', component: 'member/member' },
+                    { path: '/member/order', component: 'member/order' },
+                    { path: '/member/recharge', component: 'member/recharge' },
+                    { path: '/member/orderLog', component: 'member/orderLog' },
+                    { path: '/member/rechargeLog', component: 'member/rechargeLog' },
+                ]
+            }
         ]
     },
     {
