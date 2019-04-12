@@ -6,10 +6,6 @@ export default [
         component: '../layout/BasicLayout',
         routes: [
             {
-                path: 'helloworld',
-                component: 'Helloworld',
-            },
-            {
                 path: '/basic',
                 routes: [
                     { path: '/basic/analysis', component: 'basic/analysis' },
