@@ -14,8 +14,7 @@ export default {
         *login({payload:user},{call,put}){
             const result = yield call(loginServices.loginIn,{userName:user.userName,password:user.password});
             console.log("result>>>"+JSON.stringify(result));
-            router.push("/basic")
-
+            router.push("/wechat")
             // if(result.code==0){
             //     //console.log("code",result.code);
             //     yield put({type:'changeLoginStatus',payload:"error"})
