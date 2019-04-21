@@ -1,5 +1,4 @@
 export default [
-    { path: '/', redirect: '/member' },
     // operation
     {
         path:"/",
