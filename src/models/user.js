@@ -4,7 +4,7 @@ export default {
     namespace: 'user',
 
     state: {
-        data: [],
+        userList: [],
     },
 
     effect: {

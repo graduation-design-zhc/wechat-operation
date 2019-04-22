@@ -19,7 +19,7 @@ export default [
                 path: '/member',
                 routes: [
                     { path: '/member', redirect: 'member/member' },
-                    { path: '/member/member', component: 'member/member' },
+                    { path: '/member/list', component: 'member/memberList' },
                     { path: '/member/order', component: 'member/order' },
                     { path: '/member/recharge', component: 'member/recharge' },
                     { path: '/member/orderLog', component: 'member/orderLog' },

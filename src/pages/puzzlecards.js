@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Button } from 'antd';
+import { Card /* ,Button */ } from 'antd';
 import { connect } from 'dva';
 
 const namespace = 'puzzlecards';
@@ -19,12 +19,13 @@ const mapDispatchToProps = (dispatch) => {
             });
         },
     };
-}
+};
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class PuzzleCardsPage extends Component {
     componentDidMount() {
-        this.props.onDidMount;
+        console.log(1);
+        this.props.onDidMount();
     }
     render() {
         return (
@@ -41,12 +42,7 @@ export default class PuzzleCardsPage extends Component {
                         );
                     })
                 }
-                {/* <div>
-                    <Button onClick={() => this.props.onClickAdd({
-                        setup: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
-                        punchline: 'here we use dva',
-                    })}> 添加卡片 </Button>
-                </div> */}
+                <div>hello</div>
             </div>
         );
     }

@@ -5,7 +5,7 @@ import { connect } from 'dva';
 const namespace = 'user';
 
 const mapStateToProps = (state) => {
-    const userList = state[namespace].data;
+    const userList = state[namespace].userList;
     return {
         userList,
     };
@@ -24,7 +24,7 @@ const mapDispatchToProps = (dispatch) => {
 @connect(mapStateToProps, mapDispatchToProps)
 export default class PuzzleCardsPage extends Component {
     componentDidMount() {
-        this.props.onDidMount;
+        this.props.onDidMount();
     }
     render() {
         return (
@@ -35,13 +35,12 @@ export default class PuzzleCardsPage extends Component {
                             <Card key={user.uid}>
                                 <div>Q: {user.userName}</div>
                                 <div>
-                                    <strong>A: {user.createTime} {user.updateTime}</strong>
+                                    <strong>A: {user.userName}</strong>
                                 </div>
                             </Card>
                         );
                     })
                 }
-                <div>hello</div>
             </div>
         );
     }

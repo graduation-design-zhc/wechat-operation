@@ -13,16 +13,17 @@ export default {
         counter: 0,
     },
 
-    effect: {
+    effects: {
         *queryInitCards(_, sagaEffects) {
+            console.log("2")
             const { call, put } = sagaEffects;
-            const endPointURI = 'https://08ad1pao69.execute-api.us-east-1.amazonaws.com/dev/random_joke';
+            const endPointURI = 'https://official-joke-api.appspot.com/random_joke';
             
             const puzzle = yield call(request, endPointURI);
             yield put({ type: 'addNewCard', payload: puzzle });
             yield call(delay, 3000);
 
-            console.log("1")
+
 
             const puzzle2 = yield call(request, endPointURI);
             yield put({ type: 'addNewCard', payload: puzzle2 });
