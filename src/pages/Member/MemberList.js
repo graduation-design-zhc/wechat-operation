@@ -32,7 +32,6 @@ class MemberListPage extends Component {
     }
 
     showDeleteConfirm = (memberId) => {
-        console.log("2")
         confirm({
             title: '确定删除?',
             content: '删除后不可恢复!',
@@ -40,13 +39,20 @@ class MemberListPage extends Component {
             okType: 'danger',
             cancelText: '取消',
             onOk: () => {
-                console.log("删除测试");
                 this.props.dispatch({
-                    type: 'member/deleteMember',
+                    type: 'member/deleteMemberByMemberId',
                     payload: memberId,
-                })
-                console.log("1");
-                message.success("删除成功!");
+                }).then(() => {
+                    console.log(this.props.flag);
+                    if (this.props.flag == true) {
+                        message.success("删除成功!");
+                        console.log('删除成功!');
+                    } else if (this.props.flag == false) {
+                        message.error("删除失败!")
+                    } else {
+                        message.error("系统出错")
+                    }
+                });
             },
             onCancel() {
             },
@@ -85,13 +91,20 @@ class MemberListPage extends Component {
                 title: '昵称',
                 key: 'nickName',
                 dataIndex: 'nickName',
-                width: "15%",
+                width: "10%",
             },
             {
                 title: '性别',
                 key: 'gender',
                 dataIndex: 'gender',
                 width: "10%",
+                render: text => <div>{text === 1 ? "男" : "女"}</div>,
+            },
+            {
+                title: '生日',
+                key: 'birthday',
+                dataIndex: 'birthday',
+                width: "15%",
             },
             {
                 title: '手机',
@@ -103,13 +116,13 @@ class MemberListPage extends Component {
                 title: '注册时间',
                 key: 'createTime',
                 dataIndex: 'createTime',
-                width: "20%",
+                width: "15%",
             },
             {
                 title: '最后修改时间',
                 key: 'updateTime',
                 dataIndex: 'updateTime',
-                width: "20%",
+                width: "15%",
             }, {
                 title: '操作',
                 key: 'action',
@@ -158,6 +171,7 @@ function mapStateToProps(state) {
 
     return {
         memberList: state.member.memberList,
+        flag: state.member.flag,
     };
 }
 

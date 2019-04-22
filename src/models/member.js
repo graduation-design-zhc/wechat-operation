@@ -5,6 +5,7 @@ export default {
 
     state: {
         memberList: [],
+        flag:false, //请求是否成功
     },
 
     effects: {
@@ -12,10 +13,10 @@ export default {
             const result = yield call(memberService.queryMemberList);
             yield put({ type: "getMemberList", payload: result })
         },
-        *deleteMember({ payload: memberId }, { call, put }) {
+        *deleteMemberByMemberId({ payload: memberId }, { call, put }) {
             const result = yield call(memberService.deleteMember, memberId);
-            console.log(result);
-            yield put({ type: "deleteMember", payload: result })
+            yield put({ type: "deleteMember", payload: result });
+            yield put({ type: "queryMemberList", payload: {} })
         },
     },
 
@@ -23,8 +24,8 @@ export default {
         getMemberList(state, { payload: memberList }) {
             return { ...state, memberList };
         },
-        deleteMember(state, { payload: result }) {
-            return { ...state, result };
+        deleteMember(state, { payload: flag }) {
+            return { ...state, flag };
         }
     },
 }
