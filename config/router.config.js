@@ -1,8 +1,10 @@
 export default [
+    { path: '/auth/info', component: './member/memberAuth' },
+    { path: '/auth/member', component: './member/memberHome' }, 
     // operation
     {
-        path:"/",
-        component: '../layout/BasicLayout',
+        path: "/",
+        component: '../layouts/BasicLayout',
         routes: [
             // wechat
             { path: '/', redirect: '/wechat/analysis' },
@@ -26,20 +28,20 @@ export default [
                     { path: '/member/rechargeLog', component: 'member/rechargeLog' },
                 ]
             },
-            {
-                path: '/user',
-                routes: [
-                    { path: '/user/userList', component: 'user/userList' }
-                ]
-            }
+            // {
+            //     path: '/user',
+            //     routes: [
+            //         { path: '/user/userList', component: 'user/userList' }
+            //     ]
+            // }
         ]
     },
     {
         path: '/user',
         component: '../layouts/UserLayout',
         routes: [
-          { path: '/user', redirect: '/user/login' },
-          { path: '/user/login', component: './User/Login' },
+            { path: '/user', redirect: '/user/login' },
+            { path: '/user/login', component: './user/login' },
         ],
     },
 ];

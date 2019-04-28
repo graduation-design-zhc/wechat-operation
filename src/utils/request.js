@@ -11,8 +11,6 @@ const checkStatus = (response) => {
 	throw error;
 };
 
-
-
 export default async function request(url, options = {}) {
 
 	options.headers = {

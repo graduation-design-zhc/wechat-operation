@@ -31,13 +31,13 @@ export default class BasicLayout extends Component {
               <Menu.Item key="b"><Link to="/wechat/monitor">关注列表</Link></Menu.Item>
               <Menu.Item key="c"><Link to="/wechat/workplace">待续</Link></Menu.Item>
             </SubMenu>
-            <SubMenu
+            {/* <SubMenu
               key="sub3"
               title={<span><Icon type="database" /><span>用户管理</span></span>}
             >
               <Menu.Item key="100"><Link to="/user/userList">用户管理</Link></Menu.Item>
               <Menu.Item key="101"><Link to="/user/userList">待续</Link></Menu.Item>
-            </SubMenu>
+            </SubMenu> */}
 
           </Menu>
         </Sider>

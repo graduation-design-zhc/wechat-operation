@@ -8,10 +8,6 @@ export default {
     }],
   ],
   proxy: {
-    '/user': {
-      target: 'http://localhost:9000',
-      changeOrigin: true,
-    },
     '/wechat': {
       target: 'http://localhost:9000',
       changeOrigin: true,
