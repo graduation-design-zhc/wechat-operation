@@ -18,7 +18,6 @@ export default class BasicLayout extends Component {
               title={<span><Icon type="pie-chart" /><span>会员管理</span></span>}
             >
               <Menu.Item key="1"><Link to="/member/order">会员下单</Link></Menu.Item>
-              <Menu.Item key="2"><Link to="/member/recharge">会员充值</Link></Menu.Item>
               <Menu.Item key="3"><Link to="/member/list">会员列表</Link></Menu.Item>
               <Menu.Item key="4"><Link to="/member/orderLog">会员下单记录</Link></Menu.Item>
               <Menu.Item key="5"><Link to="/member/rechargeLog">会员充值记录</Link></Menu.Item>

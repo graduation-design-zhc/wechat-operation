@@ -5,6 +5,7 @@ export default {
 
     state: {
         memberList: [],
+        memberCardLogList: [],
         member: null,
         flag: false, //是否成功
         isBandPhone: false,
@@ -34,6 +35,15 @@ export default {
         *getMemberByOpenId({ payload: openId }, { call, put }) {
             const result = yield call(memberService.getMemberByOpenId, openId);
             yield put({ type: 'getMember', payload: result });
+        },
+        *addMemberBalance({ payload: balance }, { call, put }) {
+            const result = yield call(memberService.addBalance, balance);
+            yield put({ type: 'addMemberBalanceRdu', payload: result });
+            yield put({ type: "queryMemberList", payload: {} });
+        },
+        *getCardLogList({ }, { call, put }) {
+            const result = yield call(memberService.getCardLogList);
+            yield put({ type: 'getAllCardLogRdu', payload: result });
         }
     },
 
@@ -62,6 +72,12 @@ export default {
         },
         memberAuth(state, { payload: redirectUrl }) {
             return { ...state, redirectUrl }
+        },
+        addMemberBalanceRdu(state, { payload: flag }) {
+            return { ...state, flag };
+        },
+        getAllCardLogRdu(state, { payload: memberCardLogList }) {
+            return { ...state, memberCardLogList }
         }
     },
 }

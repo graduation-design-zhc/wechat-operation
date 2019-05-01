@@ -23,7 +23,6 @@ export default [
                     { path: '/member', redirect: 'member/member' },
                     { path: '/member/list', component: 'member/memberList' },
                     { path: '/member/order', component: 'member/order' },
-                    { path: '/member/recharge', component: 'member/recharge' },
                     { path: '/member/orderLog', component: 'member/orderLog' },
                     { path: '/member/rechargeLog', component: 'member/rechargeLog' },
                 ]

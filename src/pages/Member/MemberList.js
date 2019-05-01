@@ -3,24 +3,17 @@ import { connect } from 'dva';
 import {
     Card,
     Icon,
-    List,
     Button,
     Form,
     Input,
     Select,
-    Popconfirm,
     Table,
     Divider,
     message,
-    Popover,
     Modal,
-    Row,
-    Col,
     DatePicker,
-    Radio
+    InputNumber
 } from 'antd';
-import Link from 'umi/link';
-import router from "umi/router";
 import moment from 'moment';
 
 const Search = Input.Search;
@@ -37,6 +30,8 @@ class MemberListPage extends Component {
         dsVisible: false,
         member: [],
         size: 'default',
+        balance: null,
+        balanceVisible: false,
     }
 
     showDeleteConfirm = (memberId) => {
@@ -105,7 +100,42 @@ class MemberListPage extends Component {
     handleCancel = (e) => {
         this.setState({
             visible: false,
+            balanceVisible: false,
         });
+    }
+
+    showBalanceModel = (member) => {
+        this.setState({
+            balanceVisible: true,
+            member: member,
+        });
+    }
+
+    handleAddBalanceOk = (e) => {
+        this.props.dispatch({
+            type: 'member/addMemberBalance',
+            payload: {
+                memberId: this.state.member.memberId,
+                memberBalance: this.state.balance
+            }
+        }).then(() => {
+            if (this.props.flag == true) {
+                message.success("充值成功!");
+            } else if (this.props.flag == true) {
+                message.error("充值失败!")
+            } else {
+                message.error("系统出错")
+            }
+        });
+        this.setState({
+            balanceVisible: false,
+        });
+    }
+
+    balanceChange = (value) => {
+        this.setState({
+            balance: value,
+        })
     }
 
     componentDidMount() {
@@ -191,7 +221,7 @@ class MemberListPage extends Component {
                 fixed: 'right',
                 render: (text, record) => (
                     <span>
-                        <Button type="primary"><Icon type="edit" />充值</Button>
+                        <Button type="primary" onClick={() => this.showBalanceModel(record)}><Icon type="edit" />充值</Button>
                         <Divider type="vertical" />
                         <Button onClick={() => this.showMoel(record)} type="primary"><Icon type="edit" />编辑</Button>
                         <Divider type="vertical" />
@@ -301,6 +331,18 @@ class MemberListPage extends Component {
                             )}
                         </Form.Item>
                     </Form>
+                </Modal>
+
+
+                <Modal
+                    title="充值"
+                    visible={this.state.balanceVisible}
+                    onOk={this.handleAddBalanceOk}
+                    onCancel={this.handleCancel}
+                    okText="确认"
+                    cancelText="取消"
+                >
+                充值金额：<InputNumber min={1} max={100000} onChange={this.balanceChange} />
                 </Modal>
             </div>
 
