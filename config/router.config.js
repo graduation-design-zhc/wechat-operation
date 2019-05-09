@@ -1,6 +1,7 @@
 export default [
     { path: '/auth/info', component: './member/memberAuth' },
     { path: '/auth/member', component: './member/memberHome' }, 
+    { path: '/auth/member/edit', component: './member/memberEdit' }, 
     // operation
     {
         path: "/",

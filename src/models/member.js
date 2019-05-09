@@ -30,11 +30,16 @@ export default {
         },
         *memberAuthorize({ }, { call, put }) {
             const result = yield call(memberService.memberAuthorize);
-            window.open(result.url);
+            // window.open(result.url); //iphone无法跳转
+            window.location = result.url;
         },
         *getMemberByOpenId({ payload: openId }, { call, put }) {
             const result = yield call(memberService.getMemberByOpenId, openId);
             yield put({ type: 'getMember', payload: result });
+        },
+        *getMemberByMemberId({ payload: memberId }, { call, put }) {
+            const result = yield call(memberService.getMemberMemberId, memberId);
+            yield put({ type: 'getMemberByMemberIdRdu', payload: result });
         },
         *addMemberBalance({ payload: balance }, { call, put }) {
             const result = yield call(memberService.addBalance, balance);
@@ -68,6 +73,9 @@ export default {
             } else {
                 state.isBandPhone = false;
             }
+            return { ...state, member }
+        },
+        getMemberByMemberIdRdu(state, { payload: member }) {
             return { ...state, member }
         },
         memberAuth(state, { payload: redirectUrl }) {

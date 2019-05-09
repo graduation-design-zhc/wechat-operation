@@ -3,23 +3,22 @@ import { connect } from 'dva';
 import {
 	Card,
 	Icon,
-	List,
 	Button,
 	Form,
 	Input,
-	Select,
-	Popconfirm,
+	Avatar,
 	Table,
 	Modal,
 	message,
-	Row,
-	Col,
-	DatePicker,
-	Radio
+	Divider,
+	Typography
 } from 'antd';
 import Link from 'umi/link';
 import router from "umi/router";
 import moment from 'moment';
+import styles from './MemberHome.less';
+
+const { Meta } = Card;
 
 class MemberHome extends Component {
 
@@ -33,17 +32,21 @@ class MemberHome extends Component {
 						"phone": values.phone
 					}
 				}).then(() => {
-				    if (this.props.isBandPhone == false ) {
-				        message.success("绑定成功!");
-				    } else if (this.props.isBandPhone == true) {
-				        message.error("绑定失败!")
-				    } else {
-				        message.error("系统出错")
-				    }
+					if (this.props.isBandPhone == false) {
+						message.success("绑定成功!");
+					} else if (this.props.isBandPhone == true) {
+						message.error("绑定失败!")
+					} else {
+						message.error("系统出错")
+					}
 				});
 			}
 		});
 
+	}
+
+	editInfo = (memberId) => {
+		router.push({pathname: '/auth/member/edit', payload: {memberId: memberId}});
 	}
 
 	componentDidMount() {
@@ -57,7 +60,17 @@ class MemberHome extends Component {
 		const { getFieldDecorator } = this.props.form;
 		return (
 			<div>
-				<div>
+				<div className={styles.main}>
+					<Card
+						cover={<img alt="example" src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" />}
+						actions={[<Icon type="edit" onClick={() => this.editInfo(this.props.member.memberId)} />]}
+					>
+						<Meta
+							avatar={<Avatar src={this.props.member === null ? null : this.props.member.avatar} />}
+							title={this.props.member === null ? '' : this.props.member.nickname}
+							description={this.props.member === null ? '余额：0.0' : '余额：' + this.props.member.memberBalance + ' 积分：' + this.props.member.memberIntegral}
+						/>
+					</Card>
 				</div>
 				<Modal
 					title="您还未绑定手机，请绑定！"
@@ -70,7 +83,6 @@ class MemberHome extends Component {
 					closable={false}
 					maskClosable={false}
 					width={300}
-				// okText="绑定"
 				>
 					<Form labelCol={{ span: 1 }} wrapperCol={{ span: 100 }}>
 						<Form.Item

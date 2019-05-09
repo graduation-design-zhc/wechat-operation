@@ -70,12 +70,11 @@ class MemberListPage extends Component {
     handleOk = (e) => {
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                console.log(values.birthday);
                 this.props.dispatch({
                     type: 'member/updateMember',
                     payload: {
                         "memberId": this.state.member.memberId,
-                        "nickName": values.nickName,
+                        "nickname": values.nickname,
                         "gender": values.gender,
                         "birthday": values.birthday,
                         "phone": values.phone,

@@ -16,11 +16,15 @@ export function updateMember(member) {
 }
 
 export function memberAuthorize(){
-    return request('/wechat/authorize?returnUrl=http://25b7dded.ngrok.io/auth/member');
+    return request('/wechat/authorize?returnUrl=http://e880c4e9.ngrok.io/auth/member');
 }
 
 export function getMemberByOpenId(openId) {
     return request(`/wechat/member/getMember?openId=${openId}`);
+}
+
+export function getMemberMemberId(memberId) {
+    return request(`/wechat/member/getMemberByMemberId?memberId=${memberId}`);
 }
 
 export function addBalance(option) {
