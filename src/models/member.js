@@ -6,11 +6,22 @@ export default {
     state: {
         memberList: [],
         memberCardLogList: [],
-        member: null,
+        member: {
+            memberId: "",
+            openId: "",
+            avatar: "",
+            gender: 1,
+            phone: "",
+            nickname: "",
+            birthday: "",
+            createTime: "",
+            updateTime: "",
+            memberBalance: "0.0",
+            memberIntegral: "0.0"
+        },
         flag: false, //是否成功
         isBandPhone: false,
         redirectUrl: null,
-
     },
 
     effects: {
@@ -41,6 +52,10 @@ export default {
             const result = yield call(memberService.getMemberMemberId, memberId);
             yield put({ type: 'getMemberByMemberIdRdu', payload: result });
         },
+        *getMemberByPhone({ payload: phone }, { call, put }) {
+            const result = yield call(memberService.getMemberByPhone, phone);
+            yield put({ type: 'getMemberByPhoneRdu', payload: result });
+        },
         *addMemberBalance({ payload: balance }, { call, put }) {
             const result = yield call(memberService.addBalance, balance);
             yield put({ type: 'addMemberBalanceRdu', payload: result });
@@ -49,6 +64,11 @@ export default {
         *getCardLogList({ }, { call, put }) {
             const result = yield call(memberService.getCardLogList);
             yield put({ type: 'getAllCardLogRdu', payload: result });
+        },
+        *order({ payload: orderRequest }, { call, put }) {
+            const result = yield call(memberService.order, orderRequest);
+            console.log(result)
+            // yield put({ type: 'orderRdu', payload: result });
         }
     },
 
@@ -78,6 +98,9 @@ export default {
         getMemberByMemberIdRdu(state, { payload: member }) {
             return { ...state, member }
         },
+        getMemberByPhoneRdu(state, { payload: member }) {
+            return { ...state, member }
+        },
         memberAuth(state, { payload: redirectUrl }) {
             return { ...state, redirectUrl }
         },
@@ -86,6 +109,7 @@ export default {
         },
         getAllCardLogRdu(state, { payload: memberCardLogList }) {
             return { ...state, memberCardLogList }
-        }
+        },
+        // orderRdu(state, {payload: })
     },
 }

@@ -2,7 +2,7 @@ import fetch from 'dva/fetch';
 
 const checkStatus = (response) => {
 
-	if (response.status >= 200 && response.status <= 200) {
+	if (response.status >= 200) {
 		return response;
 	}
 

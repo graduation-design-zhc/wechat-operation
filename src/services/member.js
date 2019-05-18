@@ -27,6 +27,10 @@ export function getMemberMemberId(memberId) {
     return request(`/wechat/member/getMemberByMemberId?memberId=${memberId}`);
 }
 
+export function getMemberByPhone(phone) {
+    return request(`/wechat/member/getMemberByPhone?phone=${phone}`);
+}
+
 export function addBalance(option) {
     return request('/wechat/member/addBalance', {
         method: 'POST',
@@ -36,4 +40,11 @@ export function addBalance(option) {
 
 export function getCardLogList() {
     return request('/wechat/member/getAllCardLog');
+}
+
+export function order(orderRequst) {
+    return request('/wechat/member/order', {
+        method: 'POST',
+        body: JSON.stringify(orderRequst)
+    })
 }

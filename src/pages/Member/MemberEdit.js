@@ -39,10 +39,10 @@ class MemberEdit extends Component {
                     }
                 }).then(() => {
                     if (this.props.member != null) {
-                        message.success("修改成功!");
+                        message.success("保存成功!");
                         router.push({pathname: '/auth/member', query: {openId: this.props.member.openId}});
                     } else if (this.props.member == null) {
-                        message.error("修改失败!")
+                        message.error("保存失败!")
                     } else {
                         message.error("系统出错")
                     }

@@ -1,193 +1,260 @@
 import React, { Component } from 'react';
+import { connect } from 'dva';
 import {
-    Table, Input, InputNumber, Popconfirm, Form,
-  } from 'antd';
-  
-  const data = [];
-  for (let i = 0; i < 100; i++) {
-    data.push({
-      key: i.toString(),
-      name: `Edrward ${i}`,
-      age: 32,
-      address: `London Park no. ${i}`,
-    });
-  }
-  const FormItem = Form.Item;
-  const EditableContext = React.createContext();
-  
-  class EditableCell extends React.Component {
-    getInput = () => {
-      if (this.props.inputType === 'number') {
-        return <InputNumber />;
-      }
-      return <Input />;
-    };
-  
-    render() {
-      const {
-        editing,
-        dataIndex,
-        title,
-        inputType,
-        record,
-        index,
-        ...restProps
-      } = this.props;
-      return (
-        <EditableContext.Consumer>
-          {(form) => {
-            const { getFieldDecorator } = form;
-            return (
-              <td {...restProps}>
-                {editing ? (
-                  <FormItem style={{ margin: 0 }}>
-                    {getFieldDecorator(dataIndex, {
-                      rules: [{
-                        required: true,
-                        message: `Please Input ${title}!`,
-                      }],
-                      initialValue: record[dataIndex],
-                    })(this.getInput())}
-                  </FormItem>
-                ) : restProps.children}
-              </td>
-            );
-          }}
-        </EditableContext.Consumer>
-      );
+	Card,
+	Icon,
+	Button,
+	Form,
+	Input,
+	Avatar,
+	Select,
+	Table,
+	Modal,
+	message,
+	Divider,
+	InputNumber,
+	Typography,
+	Row,
+	Col
+} from 'antd';
+import Link from 'umi/link';
+import router from "umi/router";
+import moment from 'moment';
+import styles from './MemberHome.less';
+import { stat } from 'fs';
+
+
+const Search = Input.Search;
+
+const Option = Select.Option;
+
+
+class OrderPage extends Component {
+
+	state = {
+		visible: false,
+		payType: 0,
+		phone: '',
+		count: 1,
+		orderDetailRequests: [],
+	}
+
+	handleOk = (e) => {
+		this.setState({
+			visible: false,
+		});
+		const orderDetailRequest = {
+			productId: this.props.product.productId,
+			productName: this.props.product.productName,
+			productCount: this.state.count
+		}
+		this.setState({
+			orderDetailRequests: this.state.orderDetailRequests.concat(orderDetailRequest)
+		});
+		// console.log(this.state.orderDetailRequests);
+	}
+
+	handleCancel = (e) => {
+		this.setState({
+			visible: false,
+		});
+	}
+
+	showModel = () => {
+		this.props.dispatch({
+			type: 'product/getCategoryList',
+		})
+		console.log(this.props.productCategoryList);
+		this.setState({
+			visible: true,
+		});
+	}
+
+	confirmOrder = () => {
+		console.log(1);
+		const orderRequest = {
+			buyerPhone: this.props.member.phone,
+			payType: this.state.payType,
+			orderDetailRequests: this.state.orderDetailRequests
+		}
+		console.log(orderRequest);
+		this.props.dispatch({
+			type: 'member/order',
+			payload: orderRequest,
+		})
+	}
+
+	payOnBlur = (val) => {
+		this.setState({
+			payType: val
+		})
+	}
+
+	getMemberByPhone = (phone) => {
+		this.setState({
+			phone: phone
+		});
+		this.props.dispatch({
+			type: 'member/getMemberByPhone',
+			payload: phone,
+		}).then(() => {
+			if (this.props.member == null) {
+				message.error("手机号错误！");
+			}
+		});
+	}
+
+	getProductByCategoryType = (key) => {
+		this.props.dispatch({
+			type: 'product/getProductListByCategoryType',
+			payload: key,
+		});
+	}
+
+	getProductById = (key) => {
+		this.props.dispatch({
+			type: 'product/getProductByProductId',
+			payload: key
+		})
+	}
+
+	countChange = (value) => {
+        this.setState({
+            count: value,
+        })
     }
-  }
-  
-  class EditableTable extends React.Component {
-    constructor(props) {
-      super(props);
-      this.state = { data, editingKey: '' };
-      this.columns = [
-        {
-          title: 'name',
-          dataIndex: 'name',
-          width: '25%',
-          editable: true,
-        },
-        {
-          title: 'age',
-          dataIndex: 'age',
-          width: '15%',
-          editable: true,
-        },
-        {
-          title: 'address',
-          dataIndex: 'address',
-          width: '40%',
-          editable: true,
-        },
-        {
-          title: 'operation',
-          dataIndex: 'operation',
-          render: (text, record) => {
-            const { editingKey } = this.state;
-            const editable = this.isEditing(record);
-            return (
-              <div>
-                {editable ? (
-                  <span>
-                    <EditableContext.Consumer>
-                      {form => (
-                        <a
-                          href="javascript:;"
-                          onClick={() => this.save(form, record.key)}
-                          style={{ marginRight: 8 }}
-                        >
-                          Save
-                        </a>
-                      )}
-                    </EditableContext.Consumer>
-                    <Popconfirm
-                      title="Sure to cancel?"
-                      onConfirm={() => this.cancel(record.key)}
-                    >
-                      <a>Cancel</a>
-                    </Popconfirm>
-                  </span>
-                ) : (
-                  <a disabled={editingKey !== ''} onClick={() => this.edit(record.key)}>Edit</a>
-                )}
-              </div>
-            );
-          },
-        },
-      ];
-    }
-  
-    isEditing = record => record.key === this.state.editingKey;
-  
-    cancel = () => {
-      this.setState({ editingKey: '' });
-    };
-  
-    save(form, key) {
-      form.validateFields((error, row) => {
-        if (error) {
-          return;
-        }
-        const newData = [...this.state.data];
-        const index = newData.findIndex(item => key === item.key);
-        if (index > -1) {
-          const item = newData[index];
-          newData.splice(index, 1, {
-            ...item,
-            ...row,
-          });
-          this.setState({ data: newData, editingKey: '' });
-        } else {
-          newData.push(row);
-          this.setState({ data: newData, editingKey: '' });
-        }
-      });
-    }
-  
-    edit(key) {
-      this.setState({ editingKey: key });
-    }
-  
-    render() {
-      const components = {
-        body: {
-          cell: EditableCell,
-        },
-      };
-  
-      const columns = this.columns.map((col) => {
-        if (!col.editable) {
-          return col;
-        }
-        return {
-          ...col,
-          onCell: record => ({
-            record,
-            inputType: col.dataIndex === 'age' ? 'number' : 'text',
-            dataIndex: col.dataIndex,
-            title: col.title,
-            editing: this.isEditing(record),
-          }),
-        };
-      });
-  
-      return (
-        <EditableContext.Provider value={this.props.form}>
-          <Table
-            components={components}
-            bordered
-            dataSource={this.state.data}
-            columns={columns}
-            rowClassName="editable-row"
-            pagination={{
-              onChange: this.cancel,
-            }}
-          />
-        </EditableContext.Provider>
-      );
-    }
-  }
-  
-  export default (Form.create()(EditableTable));
+
+	componentDidMount() {
+		this.props.dispatch({
+			type: 'product/getCategoryList',
+		});
+	}
+
+	render() {
+		const { getFieldDecorator } = this.props.form;
+		return (
+			<div>
+				<Button type="primary" onClick={() => this.showModel()}>商品下单</Button>
+				<Divider />
+				<Row>
+					<Col span={12}>
+						<div>
+							<span style={{fontSize: "15px", fontWeight: "bold"}}>选购商品：</span>
+							{
+								this.state.orderDetailRequests.map(orderDetailRequest => {
+								return (
+									<div key={orderDetailRequest.productId}>{orderDetailRequest.productName} 数量：{orderDetailRequest.productCount}</div>
+								)
+							})
+							}
+							<br />
+							<br />
+							<span style={{fontSize: "15px", fontWeight: "bold"}}>付款方式：</span> <Select
+								showSearch
+								style={{ width: 200 }}
+								placeholder="付款方式"
+								optionFilterProp="children"
+								onBlur={value => this.payOnBlur(value)}
+								filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+							>
+								<Option value="0">会员卡支付</Option>
+								<Option value="1">现金支付</Option>
+							</Select>
+							<br />
+							<br />
+							<span style={{fontSize: "15px", fontWeight: "bold"}}>会员手机：</span> 
+							<Search
+								placeholder="手机号搜索"
+								onSearch={value => this.getMemberByPhone(value)}
+								style={{ width: 200 }}
+							/>
+							<br />
+							<br />
+							<Button type="primary" onClick={() => this.confirmOrder()}>购买</Button>
+						</div>
+					</Col>
+					<Col span={12}>
+						<h3>会员信息</h3>
+						昵称：{this.props.member.nickname}
+						<br />
+						<br />
+						手机：{this.props.member.phone}
+						<br />
+						<br />
+						余额：{this.props.member.memberBalance}
+						<br />
+						<br />
+						积分：{this.props.member.memberIntegral}
+					</Col>
+				</Row>
+
+				<Modal
+					title="商品添加"
+					visible={this.state.visible}
+					onOk={this.handleOk}
+					onCancel={this.handleCancel}
+					okText="确认"
+					cancelText="取消"
+				>
+					<Form labelCol={{ span: 5 }} wrapperCol={{ span: 12 }} ref="getFormValue" >
+						商品类别：<Select
+							showSearch
+							style={{ width: 200 }}
+							placeholder="商品类别"
+							optionFilterProp="children"
+							onChange={key => this.getProductByCategoryType(key)}
+							// onFocus={onFocus}
+							// onBlur={onBlur}
+							// onSearch={onSearch}
+							filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+						>
+							{
+								this.props.productCategoryList.map(category => {
+									return (
+										<Option key={category.categoryType}>{category.categoryName}</Option>
+									);
+								})
+							}
+						</Select>
+						<br />
+						<br />
+						商品名称：<Select
+							showSearch
+							style={{ width: 200 }}
+							placeholder="商品名称"
+							optionFilterProp="children"
+							onChange={key => this.getProductById(key)}
+							// onFocus={onFocus}
+							// onBlur={onBlur}
+							// onSearch={onSearch}
+							filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+						>
+							{
+								this.props.productList.map(product => {
+									return (
+										<Option key={product.productId}>{product.productName}</Option>
+									);
+								})
+							}
+						</Select>
+						<br />
+						<br />
+						购买数量：<InputNumber min={1} max={10} onChange={this.countChange} defaultValue="1" />
+					</Form>
+				</Modal>
+			</div>
+		);
+	}
+}
+
+function mapStateToProps(state) {
+
+	return {
+		member: state.member.member,
+		productCategoryList: state.product.productCategoryList,
+		productList: state.product.productList,
+		product: state.product.product,
+	};
+}
+
+export default connect(mapStateToProps)(Form.create()(OrderPage));

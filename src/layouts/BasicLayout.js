@@ -1,17 +1,46 @@
 import { Component } from 'react';
-import { Layout, Menu, Icon } from 'antd';
-const { Header, Footer, Sider, Content } = Layout;
+import { Layout, Menu, Icon, Dropdown } from 'antd';
+import styles from './BasicLayout.less';
 import Link from 'umi/link';
 
+const { Header, Footer, Sider, Content } = Layout;
 // 引入子菜单组件
 const SubMenu = Menu.SubMenu;
+
+const menu = (
+  <Menu>
+    <Menu.Item key='-1'>
+      <a onClick={(e) => {
+        e.preventDefault();
+        localStorage.clear();
+        router.push("/user");
+      }}>注销</a>
+    </Menu.Item>
+  </Menu>
+);
 
 export default class BasicLayout extends Component {
   render() {
     return (
       <Layout>
         <Sider width={256} style={{ minHeight: '100vh' }}>
-          <div style={{ height: '32px', background: 'rgba(255,255,255,.2)', margin: '16px' }} />
+          <div style={{ margin: 10 }}>
+            <img
+              src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
+              alt="logo"
+              style={{
+                height: "40px",
+                verticalAlign: "middle",
+                marginRight: "16px",
+                marginTop: "-3px",
+              }}
+            />
+            <span style={{ color: "white" }}>
+              微信会员管理
+             </span>
+          </div>
+
+
           <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
             <SubMenu
               key="sub1"
@@ -41,7 +70,15 @@ export default class BasicLayout extends Component {
           </Menu>
         </Sider>
         <Layout >
-          <Header style={{ background: '#fff', textAlign: 'center', padding: 0 }}>Header</Header>
+          <Header className={styles.header} style={{ fontSize: "16px", fontWeight: 'bold' }}>
+            <div style={{ float: 'right' }}>
+              <Dropdown overlay={menu}>
+                <a className="ant-dropdown-link" href="#" style={{ height: "50px" }}>
+                  <Icon type="user" /> admin
+								</a>
+              </Dropdown>
+            </div>
+          </Header>
           <Content style={{ margin: '24px 16px 0' }}>
             <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
               {this.props.children}

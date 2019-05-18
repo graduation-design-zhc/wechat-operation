@@ -120,7 +120,7 @@ class MemberListPage extends Component {
         }).then(() => {
             if (this.props.flag == true) {
                 message.success("充值成功!");
-            } else if (this.props.flag == true) {
+            } else if (this.props.flag == false) {
                 message.error("充值失败!")
             } else {
                 message.error("系统出错")
