@@ -1,6 +1,6 @@
 import * as loginServices from '../services/login.js';
 import router from 'umi/router';
-import {message} from 'antd';
+import { message } from 'antd';
 
 
 export default {
@@ -8,30 +8,23 @@ export default {
 
     state: {
         status: undefined,
+        user: null
     },
 
-    effects:{
-        *login({payload:user},{call,put}){
-            const result = yield call(loginServices.loginIn,{userName:user.userName,password:user.password});
-            console.log("result>>>"+JSON.stringify(result));
-            router.push("/wechat")
-            // if(result.code==0){
-            //     //console.log("code",result.code);
-            //     yield put({type:'changeLoginStatus',payload:"error"})
-            // }else{
-            //     const authority = result.data;
-            //     //console.log("权限",authority);
-            //     localStorage.setItem("userName",user.userName);
-            //     localStorage.setItem("userAuthority",authority);
-            //     yield put({type:'changeLoginStatus',payload:undefined});
-            //     router.push('/external/welcome');
-            // }
+    effects: {
+        *login({ payload: user }, { call, put }) {
+            const result = yield call(loginServices.loginIn, { userName: user.userName, password: user.password });
+            if(user != null) {
+                console.log(user)
+                localStorage.setItem("userName",user.userName);
+                router.push("/")
+            }
+            else {
+                message.error("用户名或密码错误！");
+            }
         },
     },
 
     reducers: {
-        changeLoginStatus(state, { payload:status }) {
-            return {...state,status,};
-        },
     },
 };

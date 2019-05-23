@@ -16,12 +16,13 @@ export default {
             birthday: "",
             createTime: "",
             updateTime: "",
-            memberBalance: "0.0",
-            memberIntegral: "0.0"
+            memberBalance: "",
+            memberIntegral: ""
         },
-        flag: false, //是否成功
+        flag: null, //是否成功
         isBandPhone: false,
         redirectUrl: null,
+        orderLogList: [],
     },
 
     effects: {
@@ -67,8 +68,23 @@ export default {
         },
         *order({ payload: orderRequest }, { call, put }) {
             const result = yield call(memberService.order, orderRequest);
-            console.log(result)
-            // yield put({ type: 'orderRdu', payload: result });
+            yield put({ type: 'orderRdu', payload: result });
+        },
+        *getOrderLogList({ }, { call, put }) {
+            const result = yield call(memberService.getOrderLogList);
+            yield put({ type: 'getOrderLogListRdu', payload: result });
+        },
+        *getMemberListByPhone({ payload: phone }, { call, put }) {
+            const result = yield call(memberService.getMemberListByPhone, phone);
+            yield put({ type: 'getMemberListByPhoneRdu', payload: result });
+        },
+        *getOrderLogListByPhone({ payload: phone }, { call, put }) {
+            const result = yield call(memberService.getOrderLogListByPhone, phone);
+            yield put({ type: 'getOrderLogListByPhoneRdu', payload: result });
+        },
+        *getCardLogListByPhone({ payload: phone }, { call, put }) {
+            const result = yield call(memberService.getCardLogListByPhone, phone);
+            yield put({ type: 'getCardLogListByPhoneRdu', payload: result });
         }
     },
 
@@ -110,6 +126,20 @@ export default {
         getAllCardLogRdu(state, { payload: memberCardLogList }) {
             return { ...state, memberCardLogList }
         },
-        // orderRdu(state, {payload: })
+        orderRdu(state, { payload: flag }) {
+            return { ...state, flag }
+        },
+        getOrderLogListRdu(state, { payload: orderLogList }) {
+            return { ...state, orderLogList }
+        },
+        getMemberListByPhoneRdu(state, { payload: memberList }) {
+            return { ...state, memberList }
+        },
+        getOrderLogListByPhoneRdu(state, { payload: orderLogList }) {
+            return { ...state, orderLogList }
+        },
+        getCardLogListByPhoneRdu(state, { payload: memberCardLogList }) {
+            return { ...state, memberCardLogList }
+        }
     },
 }

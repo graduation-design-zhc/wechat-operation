@@ -50,7 +50,7 @@ class MemberListPage extends Component {
                         message.success("删除成功!");
                     } else if (this.props.flag == true) {
                         message.error("删除失败!")
-                    } else {
+                    } else if (this.props.flag == null) {
                         message.error("系统出错")
                     }
                 });
@@ -122,7 +122,7 @@ class MemberListPage extends Component {
                 message.success("充值成功!");
             } else if (this.props.flag == false) {
                 message.error("充值失败!")
-            } else {
+            } else if (this.props.flag == null) {
                 message.error("系统出错")
             }
         });
@@ -135,6 +135,19 @@ class MemberListPage extends Component {
         this.setState({
             balance: value,
         })
+    }
+
+    handleSearch = (value) => {
+        this.props.dispatch({
+            type: 'member/getMemberListByPhone',
+            payload: value
+        });
+    }
+
+    queryMemberList = () => {
+        this.props.dispatch({
+            type: 'member/queryMemberList',
+        });
     }
 
     componentDidMount() {
@@ -151,9 +164,9 @@ class MemberListPage extends Component {
                 <Form style={{ marginTop: "20px" }}>
                     <Form.Item>
                         <div>
-                            <Icon type="align-left" />{this.state.keyWord === "" ? "全部" : this.state.keyWord}
+                            <Icon type="align-left" onClick={() => this.queryMemberList()} />全部
                             <Search
-                                placeholder="请输入关键字查询"
+                                placeholder="请输入手机号查询"
                                 onSearch={value => this.handleSearch(value)}
                                 style={{ width: 400, marginLeft: "10px" }}
                                 enterButton
@@ -176,7 +189,7 @@ class MemberListPage extends Component {
                 key: 'avatar',
                 dataIndex: 'avatar',
                 width: 100,
-                render: text => <div><img src={text} style={{width: 50}} ></img></div>
+                render: text => <div><img src={text} style={{ width: 50 }} ></img></div>
             },
             {
                 title: '性别',
@@ -341,7 +354,7 @@ class MemberListPage extends Component {
                     okText="确认"
                     cancelText="取消"
                 >
-                充值金额：<InputNumber min={1} max={100000} onChange={this.balanceChange} />
+                    充值金额：<InputNumber min={1} max={100000} onChange={this.balanceChange} />
                 </Modal>
             </div>
 

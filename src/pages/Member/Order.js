@@ -51,7 +51,6 @@ class OrderPage extends Component {
 		this.setState({
 			orderDetailRequests: this.state.orderDetailRequests.concat(orderDetailRequest)
 		});
-		// console.log(this.state.orderDetailRequests);
 	}
 
 	handleCancel = (e) => {
@@ -71,17 +70,27 @@ class OrderPage extends Component {
 	}
 
 	confirmOrder = () => {
-		console.log(1);
 		const orderRequest = {
 			buyerPhone: this.props.member.phone,
 			payType: this.state.payType,
 			orderDetailRequests: this.state.orderDetailRequests
 		}
-		console.log(orderRequest);
 		this.props.dispatch({
 			type: 'member/order',
 			payload: orderRequest,
-		})
+		}).then(() => {
+			if (this.props.flag == true) {
+				message.success("购买成功！");
+				this.setState({
+					orderDetailRequests: [],
+				});
+			} else if (this.props.flag == false) {
+				message.error("购买失败，余额不足，请充值！");
+			} else if (this.props.flag == null) {
+				message.error("系统错误！");
+			}
+
+		});
 	}
 
 	payOnBlur = (val) => {
@@ -119,10 +128,10 @@ class OrderPage extends Component {
 	}
 
 	countChange = (value) => {
-        this.setState({
-            count: value,
-        })
-    }
+		this.setState({
+			count: value,
+		})
+	}
 
 	componentDidMount() {
 		this.props.dispatch({
@@ -139,17 +148,17 @@ class OrderPage extends Component {
 				<Row>
 					<Col span={12}>
 						<div>
-							<span style={{fontSize: "15px", fontWeight: "bold"}}>选购商品：</span>
+							<span style={{ fontSize: "15px", fontWeight: "bold" }}>选购商品：</span>
 							{
 								this.state.orderDetailRequests.map(orderDetailRequest => {
-								return (
-									<div key={orderDetailRequest.productId}>{orderDetailRequest.productName} 数量：{orderDetailRequest.productCount}</div>
-								)
-							})
+									return (
+										<div key={orderDetailRequest.productId}>{orderDetailRequest.productName} 数量：{orderDetailRequest.productCount}</div>
+									)
+								})
 							}
 							<br />
 							<br />
-							<span style={{fontSize: "15px", fontWeight: "bold"}}>付款方式：</span> <Select
+							<span style={{ fontSize: "15px", fontWeight: "bold" }}>付款方式：</span> <Select
 								showSearch
 								style={{ width: 200 }}
 								placeholder="付款方式"
@@ -162,7 +171,7 @@ class OrderPage extends Component {
 							</Select>
 							<br />
 							<br />
-							<span style={{fontSize: "15px", fontWeight: "bold"}}>会员手机：</span> 
+							<span style={{ fontSize: "15px", fontWeight: "bold" }}>会员手机：</span>
 							<Search
 								placeholder="手机号搜索"
 								onSearch={value => this.getMemberByPhone(value)}
@@ -224,9 +233,6 @@ class OrderPage extends Component {
 							placeholder="商品名称"
 							optionFilterProp="children"
 							onChange={key => this.getProductById(key)}
-							// onFocus={onFocus}
-							// onBlur={onBlur}
-							// onSearch={onSearch}
 							filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
 						>
 							{
@@ -251,6 +257,7 @@ function mapStateToProps(state) {
 
 	return {
 		member: state.member.member,
+		flag: state.member.flag,
 		productCategoryList: state.product.productCategoryList,
 		productList: state.product.productList,
 		product: state.product.product,

@@ -20,10 +20,33 @@ const menu = (
 );
 
 export default class BasicLayout extends Component {
+
+  state = {
+    collapsed: false,
+    show: "inline-block",
+  };
+
+  toggle = () => {
+    this.setState({
+      collapsed: !this.state.collapsed,
+    });
+    if (this.state.collapsed == true) {
+      this.setState({
+        show: "inline-block",
+      });
+    }
+    else {
+      this.setState({
+        show: "none",
+      });
+    }
+  };
+
   render() {
+    const show = this.state.show;
     return (
       <Layout>
-        <Sider width={256} style={{ minHeight: '100vh' }}>
+        <Sider width={256} style={{ minHeight: '100vh' }} trigger={null} collapsible collapsed={this.state.collapsed}>
           <div style={{ margin: 10 }}>
             <img
               src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
@@ -35,9 +58,9 @@ export default class BasicLayout extends Component {
                 marginTop: "-3px",
               }}
             />
-            <span style={{ color: "white" }}>
+            <span style={{ color: "white", display: show }}>
               微信会员管理
-             </span>
+            </span>
           </div>
 
 
@@ -55,26 +78,21 @@ export default class BasicLayout extends Component {
               key="sub2"
               title={<span><Icon type="dashboard" /><span>微信管理</span></span>}
             >
-              <Menu.Item key="a"><Link to="/wechat/analysis">菜单管理</Link></Menu.Item>
-              <Menu.Item key="b"><Link to="/wechat/monitor">关注列表</Link></Menu.Item>
-              <Menu.Item key="c"><Link to="/wechat/workplace">待续</Link></Menu.Item>
+              <Menu.Item key="a"><Link to="/member/wxmenu">菜单管理</Link></Menu.Item>
             </SubMenu>
-            {/* <SubMenu
-              key="sub3"
-              title={<span><Icon type="database" /><span>用户管理</span></span>}
-            >
-              <Menu.Item key="100"><Link to="/user/userList">用户管理</Link></Menu.Item>
-              <Menu.Item key="101"><Link to="/user/userList">待续</Link></Menu.Item>
-            </SubMenu> */}
-
           </Menu>
         </Sider>
         <Layout >
-          <Header className={styles.header} style={{ fontSize: "16px", fontWeight: 'bold' }}>
+          <Header className={styles.header} style={{ fontSize: "16px", fontWeight: 'bold', background: '#fff' }}>
+            <Icon
+              className="trigger"
+              type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
+              onClick={this.toggle}
+            />
             <div style={{ float: 'right' }}>
               <Dropdown overlay={menu}>
                 <a className="ant-dropdown-link" href="#" style={{ height: "50px" }}>
-                  <Icon type="user" /> admin
+                  <Icon type="user" /> {localStorage.getItem("userName")}
 								</a>
               </Dropdown>
             </div>
@@ -84,7 +102,7 @@ export default class BasicLayout extends Component {
               {this.props.children}
             </div>
           </Content>
-          <Footer style={{ textAlign: 'center' }}>WeChat membership management system ©2018 Created by Ant UED</Footer>
+          <Footer style={{ textAlign: 'center' }}>WeChat membership management system ©2018 Created by Zhc Graduation Design</Footer>
         </Layout>
       </Layout>
     )

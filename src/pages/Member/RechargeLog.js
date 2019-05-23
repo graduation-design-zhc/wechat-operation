@@ -25,6 +25,19 @@ class RechargeLogPage extends Component {
         keyWord: "",
     }
 
+    queryCardLogList = () => {
+        this.props.dispatch({
+            type: 'member/getCardLogList',
+        });
+    }
+
+    handleSearch = (value) => {
+        this.props.dispatch({
+            type: 'member/getCardLogListByPhone',
+            payload: value,
+        });
+    }
+
     componentDidMount() {
         this.props.dispatch({
             type: 'member/getCardLogList',
@@ -37,9 +50,9 @@ class RechargeLogPage extends Component {
                 <Form style={{ marginTop: "20px" }}>
                     <Form.Item>
                         <div>
-                            <Icon type="align-left" />{this.state.keyWord === "" ? "全部" : this.state.keyWord}
+                        <Icon type="align-left" onClick={() => this.queryCardLogList()} />全部
                             <Search
-                                placeholder="请输入关键字查询"
+                                placeholder="请输入手机号查询"
                                 onSearch={value => this.handleSearch(value)}
                                 style={{ width: 400, marginLeft: "10px" }}
                                 enterButton
@@ -102,7 +115,7 @@ class RechargeLogPage extends Component {
                             columns={columns}
                             dataSource={this.props.memberCardLogList}
                             style={{ minHeight: '625px' }}
-                            rowKey={record => record.memberId}
+                            // rowKey={record => record.memberId}
                             pagination={{  //分页
                                 pageSize: 5,  //显示几条一页
                             }}
